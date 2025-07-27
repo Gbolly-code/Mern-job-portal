@@ -66,6 +66,28 @@ const Navbar = () => {
                         </button>
                     </div>
         </nav>
+
+        {/*navitems for mobile*/}
+        <div className={`px-4 py-5 bg-black rounded-sm ${isMenuOpen ? "" : "hidden"}`}>
+            <ul>
+                {navItems.map(({ path, title }) => (
+                                <li key={path} className='text-base text-white first:text-white py-1'>
+                                    <NavLink
+                                    to={path}
+                                    className={({ isActive }) =>
+                                    isActive ? "active" : "" }
+                                    >
+                                     {title}
+                                    </NavLink>
+                                </li>
+                            ))} 
+                   <li className='text-white py-1'>
+                    <Link to='/login'>Log in</Link>
+                   </li>
+
+            </ul>
+        </div>
+
     </header>
   )
 }
