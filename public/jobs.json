@@ -146,7 +146,7 @@
       "companyLogo": "/images/Loom.png",
       "minPrice": "50",
       "maxPrice": "75",
-      "salaryType": "Yearly",
+      "salaryType": "Monthly",
       "jobLocation": "London",
       "postingDate": "2023-10-28",
       "experienceLevel": "Intership",

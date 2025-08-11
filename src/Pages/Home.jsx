@@ -6,6 +6,7 @@ import Sidebar from '../sidebar/Sidebar'
 
 const Home = () => {
   const [selectedCategory, setSelectedCategory] = useState(null)
+  const [salaryType, setSalaryType] = useState('Hourly');
   const [jobs, setJobs] = useState([])
   const [isLoading, setIsLoading] = useState(true)
   const  [currentPage, setIsCurrentPage] = useState(1)
@@ -28,15 +29,13 @@ useEffect(() => {
     const filteredItems = jobs.filter((job) => job.jobTitle.toLowerCase().indexOf(query.toLowerCase()) !== -1)
 
     // Radio Filtering
-
     const handleChange = (event) => {
       setSelectedCategory(event.target.value)
     }
 
-
-    // button-based filtering 
-    const handleClick = (event) => {
-      setSelectedCategory(event.target.value)
+    // button-based filtering for salary type
+    const handleSalaryTypeClick = (event) => {
+      setSalaryType(event.target.value)
     }
 
     //calculate the index range
@@ -95,13 +94,20 @@ filteredJobs = filteredJobs.slice(startIndex, endIndex)
       <div className='bg-[#FAFAFA] md:grid grid-cols-4 gap-8 lg:px-24 px-4 py-12'>
         {/*left side*/}
         <div className='bg-white p-4 rounded'>
-          <Sidebar handleChange={handleChange} handleClick={handleClick}/></div>
+          <Sidebar 
+            handleChange={handleChange} 
+            handleClick={handleSalaryTypeClick}
+            salaryType={salaryType}
+          />
+          </div>
 
         {/* job cards*/}
         <div className='col-span-2 bg-white p-4 rounded-sm'>
           {
             isLoading ? (<p className='font-medium'>Loading...</p>) : result.length > 0 ? (<Jobs result={result}/>)
-            : <><h3 className='text-lg font-bold mb-2'>{result.length} Jobs</h3> <p>No data found</p></>
+            : <><h3 className='text-lg font-bold mb-2'>{result.length} Jobs</h3> <p>No data found</p>
+            </>
+  
           }
 
           {/* pagination here */}
