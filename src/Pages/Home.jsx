@@ -39,6 +39,27 @@ useEffect(() => {
       setSelectedCategory(event.target.value)
     }
 
+    //calculate the index range
+    const calculatePageRange = () => {
+      const startIndex = (currentPage - 1) * itemsPerPage
+      const endIndex = startIndex + itemsPerPage
+      return {startIndex, endIndex}
+    }
+
+    //function for the next base
+    const nextPage = () => {
+      if(currentPage < Math.ceil(filteredItems.length / itemsPerPage)) {
+        setIsCurrentPage(currentPage + 1)
+      }
+    }
+
+    //function for the previous page
+    const prevPage = () => {
+      if(currentPage > 1){
+        setIsCurrentPage(currentPage - 1)
+      }
+    }
+
     // main functions 
     const filteredData = (jobs, selected, query) => {
       let filteredJobs = jobs;
@@ -58,7 +79,9 @@ useEffect(() => {
         ))
       }
 
-
+// slice the data based on current page
+const {startIndex, endIndex} = calculatePageRange()
+filteredJobs = filteredJobs.slice(startIndex, endIndex)
       return filteredJobs.map((data, i) => <Card key={i} data={data} />)
 
     }
@@ -78,7 +101,18 @@ useEffect(() => {
         <div className='col-span-2 bg-white p-4 rounded-sm'>
           {
             isLoading ? (<p className='font-medium'>Loading...</p>) : result.length > 0 ? (<Jobs result={result}/>)
-            : <><h3>{result.length} Jobs</h3> <p>No data found</p></>
+            : <><h3 className='text-lg font-bold mb-2'>{result.length} Jobs</h3> <p>No data found</p></>
+          }
+
+          {/* pagination here */}
+          {
+            result.length > 0 ? (
+            <div className='flex justify-center mt-4 space-x-8'>
+              <button>Previous</button>
+              <span>Page {currentPage} of {Math.ceil(filteredItems.length / itemsPerPage)}</span>
+              <button>Next</button>
+            </div>
+            ) : "" 
           }
           </div>
 
