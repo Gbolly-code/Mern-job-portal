@@ -7,10 +7,15 @@ import Sidebar from '../sidebar/Sidebar'
 const Home = () => {
   const [selectedCategory, setSelectedCategory] = useState(null)
   const [jobs, setJobs] = useState([])
+  const [isLoading, setIsLoading] = useState(true)
+  const  [currentPage, setIsCurrentPage] = useState(1)
+  const itemsPerPage = 6
 
 useEffect(() => {
+  setIsLoading(true)
      fetch("jobs.json").then(res => res.json()).then(data => {
       setJobs(data)
+      setIsLoading(false)
      })
 }, [])
 //handle input change 
@@ -70,7 +75,12 @@ useEffect(() => {
           <Sidebar handleChange={handleChange} handleClick={handleClick}/></div>
 
         {/* job cards*/}
-        <div className='col-span-2 bg-white p-4 rounded-sm'><Jobs result={result}/></div>
+        <div className='col-span-2 bg-white p-4 rounded-sm'>
+          {
+            isLoading ? (<p className='font-medium'>Loading...</p>) : result.length > 0 ? (<Jobs result={result}/>)
+            : <><h3>{result.length} Jobs</h3> <p>No data found</p></>
+          }
+          </div>
 
         {/*right side */}
         <div className='bg-white p-4 rounded'>Right</div>
