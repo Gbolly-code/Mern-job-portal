@@ -70,9 +70,22 @@ useEffect(() => {
 
       //category filtering 
       if (selected) {
-        filteredJobs = filteredJobs.filter(({ jobLocation, maxPrice, experienceLevel, salaryType, employmentType, postingDate, }) => 
-        postingDate >= selected
-        );
+        filteredJobs = filteredJobs.filter(
+          ({ 
+            jobLocation, 
+            maxPrice, 
+            experienceLevel, 
+            salaryType, 
+            employmentType, 
+            postingDate, 
+          }) =>
+          jobLocation.toLowerCase() === selected.toLowerCase() || 
+          parseInt(maxPrice) <= parseInt(selected) ||
+          postingDate >= selected ||
+          salaryType.toLowerCase() === selected.toLowerCase() ||
+          employmentType.toLowerCase() === selected.toLowerCase()
+            );
+            console.log(filteredJobs);
       }
 
 // slice the data based on current page
