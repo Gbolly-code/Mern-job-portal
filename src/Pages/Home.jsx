@@ -3,6 +3,7 @@ import Banner from '../components/Banner'
 import Jobs from './Jobs'
 import Card from '../components/Card'
 import Sidebar from '../sidebar/Sidebar'
+import Newsletter from '../components/Newsletter'
 
 const Home = () => {
   const [selectedCategory, setSelectedCategory] = useState(null)
@@ -135,7 +136,7 @@ filteredJobs = filteredJobs.slice(startIndex, endIndex)
           </div>
 
         {/*right side */}
-        <div className='bg-white p-4 rounded'>Right</div>
+        <div className='bg-white p-4 rounded'><Newsletter/></div>
         
       </div>
     </div>
