@@ -14,7 +14,7 @@ const CreateJob = () => {
     <div className='max-w-screen-2xl container mx-auto xl:px-24 px-4'>
       {/* form */}
       <div className='bg-[#FAFAFA] py-10 px-4 lg:px-16'>
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form onSubmit={handleSubmit(onSubmit)} className='space-y-5'>
 
             {/* first row */}
             <div className='create-job-flex'>
@@ -43,8 +43,46 @@ const CreateJob = () => {
                 className='create-job-input'/>
              </div>
             </div>
+
+            {/*3rd row */}
+            <div className='create-job-flex'>
+             <div className='lg:w-1/2 w-full'>
+               <label className='block mb-2 text-lg'>Salary Type</label>
+                <select {...register("Title")} className='create-job-input'>
+                     <option value={""}>Choose your salary</option>
+                     <option value={"Hourly"}>Hourly</option>
+                     <option value={"Monthly"}>Monthly</option>
+                     <option value={"Yearly"}>Yearly</option>
+                </select>
+             </div>
+             <div className='lg:w-1/2 w-full'>
+               <label className='block mb-2 text-lg'>Job Location</label>
+                <input type="text" placeholder="Ex: New York" {...register("jobLocation")} 
+                className='create-job-input'/>
+             </div>
+            </div>
+
+            {/*4th row*/}
+            <div className='create-job-flex'>
+                <div className='lg:w-1/2 w-full'>
+               <label className='block mb-2 text-lg'>Job Posting Date</label>
+                <input type="date" placeholder="Ex: 2025-08-11" {...register("postingDate")} 
+                className='create-job-input'/>
+             </div>
+             <div className='lg:w-1/2 w-full'>
+               <label className='block mb-2 text-lg'>Experience Level</label>
+                <select {...register("Title")} className='create-job-input'>
+                     <option value={""}>Choose your salary</option>
+                     <option value={"Hourly"}>Hourly</option>
+                     <option value={"Monthly"}>Monthly</option>
+                     <option value={"Yearly"}>Yearly</option>
+                </select>
+             </div>
+             
+            </div>
+
               
-            <input type="submit" className='my-5' />
+            <input type="submit" className='block mt-12 bg-blue text-white font-semibold px-8 py-2 rounded-sm cursor-pointer' />
         </form>
 
       </div>
