@@ -125,9 +125,27 @@ const CreateJob = () => {
              </div>
             </div>
 
+            {/* 7th row */}
+            <div className='w-full'>
+                <label className='block mb-2 text-lg'>Job Description</label>
+                <textarea className='w-full pl-3 py-1.5 focus:outline-none placeholder:text-gray-700'
+                rows={6}
+                defaultValue={"Mollit in laborum tempur lorem incidunt irure. Aute eu ex ad sunt. Pariatur sint culpa do incidunt eiusmod culpa. laborum tempor lorem incidunt."}
+                placeholder='job decription'
+                {...register("description")}/>
+            </div>
 
-              
-            <input type="submit" className='block mt-12 bg-blue text-white font-semibold px-8 py-2 rounded-sm cursor-pointer' />
+            {/* last row */}
+            <div className='w-full'>
+               <label className='block mb-2 text-lg'>Job Posted By</label>
+                <input 
+                type="email" 
+                placeholder="your email" 
+                {...register("postedBy")} 
+                className='create-job-input'/>
+            </div>
+
+            <input type="submit" className='block mt-12 bg-blue text-white font-semibold px-8 py-2 rounded-sm cursor-pointer'/>
         </form>
 
       </div>
