@@ -1,14 +1,28 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useForm } from 'react-hook-form'
+import CreatableSelect from 'react-select/creatable'
 
 const CreateJob = () => {
+    const [selectedOption, setSelectedOption] = useState(null);
     const {
         register,
         handleSubmit,
         formState: { errors },
     } = useForm();
 
-    const onSubmit = (data) => console.log(data);
+    const onSubmit = (data) => {console.log(data);}
+
+    const options = [
+        {value: 'Javascript', label: 'Javascript'},
+        {value: 'C++', label: 'C++'},
+        {value: 'HTML', label: 'HTML'},
+        {value: 'CSS', label: 'CSS'},
+        {value: 'Node', label: 'Node'},
+        {value: 'React', label: 'React'},
+        {value: 'MongoDB', label: 'MongoDB'},
+        {value: 'Redux', label: 'Redux'},
+    ]
+
 
   return (
     <div className='max-w-screen-2xl container mx-auto xl:px-24 px-4'>
@@ -71,15 +85,46 @@ const CreateJob = () => {
              </div>
              <div className='lg:w-1/2 w-full'>
                <label className='block mb-2 text-lg'>Experience Level</label>
-                <select {...register("Title")} className='create-job-input'>
-                     <option value={""}>Choose your salary</option>
-                     <option value={"Hourly"}>Hourly</option>
-                     <option value={"Monthly"}>Monthly</option>
-                     <option value={"Yearly"}>Yearly</option>
+                <select {...register("experienceLevel")} className='create-job-input'>
+                     <option value={""}>Choose your experience</option>
+                     <option value={"NoExperience"}>Hourly</option>
+                     <option value={"Internship"}>Internship</option>
+                     <option value={"Work remotely"}>Work remotely</option>
                 </select>
              </div>
-             
             </div>
+
+            {/*5th row*/}
+            <div>
+                <label className='block mb-2 text-lg'>Required Skill Sets:</label>
+                  <CreatableSelect
+                  defaultValue={selectedOption}
+                  onChange={setSelectedOption}
+                  options={options}
+                  isMulti
+                  className='create-job-input py-4 '/>
+
+            </div>
+
+            {/* 6th row */}
+            
+            <div className='create-job-flex'>
+                <div className='lg:w-1/2 w-full'>
+               <label className='block mb-2 text-lg'>Company Logo</label>
+                <input type="url" placeholder="Paste your company logo URL: https://weshare.com/img1" {...register("companyLogo")} 
+                className='create-job-input'/>
+             </div>
+             <div className='lg:w-1/2 w-full'>
+               <label className='block mb-2 text-lg'>Employment Type</label>
+                <select {...register("employmentType")} className='create-job-input'>
+                     <option value={""}>Choose your employment</option>
+                     <option value={"full-time"}>Full-Time</option>
+                     <option value={"Part-time"}>Part-time</option>
+                     <option value={"Temporary"}>Temporary</option>
+                </select>
+             </div>
+            </div>
+
 
               
             <input type="submit" className='block mt-12 bg-blue text-white font-semibold px-8 py-2 rounded-sm cursor-pointer' />
