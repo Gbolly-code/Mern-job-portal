@@ -3,14 +3,31 @@ import { useForm } from 'react-hook-form'
 import CreatableSelect from 'react-select/creatable'
 
 const CreateJob = () => {
+
     const [selectedOption, setSelectedOption] = useState(null);
     const {
         register,
-        handleSubmit,
+        handleSubmit,reset,
         formState: { errors },
     } = useForm();
 
-    const onSubmit = (data) => {console.log(data);}
+    const onSubmit = (data) => {
+      data.skills = selectedOption;
+      //{console.log(data);
+    fetch('http://localhost:5000/post-job', {
+      method: 'POST',
+      headers: {'content-Type' : "application/json"},
+        body: JSON.stringify(data)
+    })
+    .then(res => res.json())
+    .then((result) => {
+      console.log(result);
+      if(result.acknowledged === true) {
+        alert('Job posted successfully!')
+      }
+      reset()
+    });
+  };
 
     const options = [
         {value: 'Javascript', label: 'Javascript'},
@@ -63,10 +80,10 @@ const CreateJob = () => {
              <div className='lg:w-1/2 w-full'>
                <label className='block mb-2 text-lg'>Salary Type</label>
                 <select {...register("Title")} className='create-job-input'>
-                     <option value={""}>Choose your salary</option>
-                     <option value={"Hourly"}>Hourly</option>
-                     <option value={"Monthly"}>Monthly</option>
-                     <option value={"Yearly"}>Yearly</option>
+                     <option value="">Choose your salary</option>
+                     <option value="Hourly">Hourly</option>
+                     <option value="Monthly">Monthly</option>
+                     <option value="Yearly">Yearly</option>
                 </select>
              </div>
              <div className='lg:w-1/2 w-full'>
@@ -86,10 +103,10 @@ const CreateJob = () => {
              <div className='lg:w-1/2 w-full'>
                <label className='block mb-2 text-lg'>Experience Level</label>
                 <select {...register("experienceLevel")} className='create-job-input'>
-                     <option value={""}>Choose your experience</option>
-                     <option value={"NoExperience"}>Hourly</option>
-                     <option value={"Internship"}>Internship</option>
-                     <option value={"Work remotely"}>Work remotely</option>
+                     <option value="">Choose your experience</option>
+                     <option value="NoExperience">Hourly</option>
+                     <option value="Internship">Internship</option>
+                     <option value="Work remotely">Work remotely</option>
                 </select>
              </div>
             </div>

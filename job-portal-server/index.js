@@ -1,7 +1,7 @@
 const express = require('express')
 const app = express()
 const cors = require('cors')
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 5000;
 require('dotenv').config()
 console.log(process.env.DB_USER)
 console.log(process.env.DB_PASSWORD)
@@ -36,7 +36,7 @@ async function run() {
     const jobsCollection = db.collection('demoJobs')
 
     //post a job
-    app.post('/all-jobs', async (req, res) => {
+    app.post('/post-job', async (req, res) => {
         const body = req.body;
         body.createAt = new Date();
         //console.log(body)
@@ -54,6 +54,13 @@ async function run() {
     // get all jobs
     app.get('/all-jobs', async (req, res) => {
         const jobs = await jobsCollection.find({}).toArray()
+        res.send(jobs)
+    })
+
+    // get jobs by email
+    app.get('/my-jobs/:email', async (req, res) => {
+        //console.log(req.params.email)
+        const jobs = await jobsCollection.find({postedBy: req.params.email}).toArray()
         res.send(jobs)
     })
 
