@@ -2,26 +2,31 @@ import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 
 const MyJobs = () => {
-    const email = "olaniyangbolly@gmail.com"
     const [jobs, setJobs] = useState([])
     const [searchText, setSearchText] = useState("")
     const [isLoading, setIsLoading] = useState(true)
 
     useEffect(() => {
         setIsLoading(true)
-        fetch(`http://localhost:5000/my-jobs/olaniyangbolly@gmail.com`)
+        fetch(`http://localhost:5000/my-jobs/gboolly@gmail.com`)
         .then(res => res.json())
-        .then(data => {setJobs(data)
+        .then(data => 
+            {setJobs(data)
     
-    })   }, [])
+    })   }, []);
 
-    console.log(searchText)
+    //console.log(searchText)
 
     const handleSearch = () => {
         const filter = jobs.filter((job) => job.jobTitle.toLowerCase().indexOf(searchText.toLocaleLowerCase()) !== -1)
         setJobs(filter)
         setIsLoading(false)
     }
+
+    const handleDelete = (id) => {
+         console.log(id)
+        }
+    
   return (
     <div className='max-w-screen-2xl container mx-auto xl:px-24 px-4'>
       <div className='my-jobs-container'>
@@ -70,10 +75,10 @@ const MyJobs = () => {
           <th class="px-6 bg-blueGray-50 text-blueGray-500 align-middle border border-solid border-blueGray-100 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">
                           SALARY
                         </th>
-                        <th class="px-6 bg-blueGray-50 text-blueGray-500 align-middle border border-solid border-blueGray-100 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">
+         <th class="px-6 bg-blueGray-50 text-blueGray-500 align-middle border border-solid border-blueGray-100 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">
                           EDIT
                         </th>
-                        <th class="px-6 bg-blueGray-50 text-blueGray-500 align-middle border border-solid border-blueGray-100 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">
+         <th class="px-6 bg-blueGray-50 text-blueGray-500 align-middle border border-solid border-blueGray-100 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">
                           DELETE
                         </th>
           </tr>
@@ -99,7 +104,7 @@ const MyJobs = () => {
               <button><Link to={`/edit-job/${job?._id}`}>Edit</Link></button>
             </td>
             <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-              <button className='bg-red-700 py-2 px-6 text-white rounded-sm'>Delete</button>
+              <button onClick={() => handleDelete(job._id)}className='bg-red-700 py-2 px-6 text-white rounded-sm'>Delete</button>
             </td>
           </tr>
                 ))

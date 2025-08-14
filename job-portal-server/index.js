@@ -14,7 +14,7 @@ app.use(cors())
 //pasword: bID4GXTSwcRJduOh
 
 
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@job-portal-demo.ljramob.mongodb.net/?retryWrites=true&w=majority&appName=job-portal-demo`;
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
@@ -58,10 +58,18 @@ async function run() {
     })
 
     // get jobs by email
-    app.get('/my-jobs/:email', async (req, res) => {
+    app.get('/myJobs/:email', async (req, res) => {
         //console.log(req.params.email)
         const jobs = await jobsCollection.find({postedBy: req.params.email}).toArray()
         res.send(jobs)
+    })
+
+// delete a job
+    app.delete('/job/:id', async (req, res) => {
+        const id = req.params.id;
+        const filter = {_id: new ObjectId(id)}
+        const result = await jobsCollection.deleteOne(filter)
+        req.send(result)
     })
 
 
