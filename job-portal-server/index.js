@@ -58,7 +58,7 @@ async function run() {
     })
 
     // get jobs by email
-    app.get('/myJobs/:email', async (req, res) => {
+    app.get('/my-jobs/:email', async (req, res) => {
         //console.log(req.params.email)
         const jobs = await jobsCollection.find({postedBy: req.params.email}).toArray()
         res.send(jobs)
@@ -67,9 +67,9 @@ async function run() {
 // delete a job
     app.delete('/job/:id', async (req, res) => {
         const id = req.params.id;
-        const filter = {_id: new ObjectId(id)}
+        const filter = {_id: new ObjectId(id) };
         const result = await jobsCollection.deleteOne(filter)
-        req.send(result)
+        res.send(result);
     })
 
 
