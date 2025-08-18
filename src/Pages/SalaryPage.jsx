@@ -9,7 +9,7 @@ const SalaryPage = () => {
 
     useEffect( () => {
         fetch("salary.json").then(res => res.json()).then(data => setSalary(data))
-    }, [])
+    }, [searchText])
     const handleSearch = () => {
       if (!searchText.trim()) {
     fetch("salary.json")
