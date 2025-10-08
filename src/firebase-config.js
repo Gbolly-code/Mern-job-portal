@@ -17,10 +17,20 @@ const firebaseConfig = {
 
 // Validate that all required environment variables are present
 if (!firebaseConfig.apiKey || !firebaseConfig.projectId) {
-  throw new Error(
-    'Missing Firebase configuration. Please create a .env file with your Firebase credentials. ' +
-    'See env.example.txt for the required variables.'
-  );
+  const errorMessage = 
+    '❌ Missing Firebase configuration!\n\n' +
+    'Local Development:\n' +
+    '  - Create a .env file in the project root\n' +
+    '  - Copy variables from env.example.txt\n' +
+    '  - Add your Firebase credentials\n\n' +
+    'Vercel/Production:\n' +
+    '  - Go to Project Settings → Environment Variables\n' +
+    '  - Add all VITE_FIREBASE_* variables\n' +
+    '  - Redeploy the project\n\n' +
+    'See SECURITY.md for detailed instructions.';
+  
+  console.error(errorMessage);
+  throw new Error('Missing Firebase configuration. Check console for details.');
 }
 
 // Initialize Firebase

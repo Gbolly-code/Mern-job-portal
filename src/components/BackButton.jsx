@@ -16,7 +16,7 @@ const BackButton = ({ to = null, label = "Back" }) => {
     return (
         <button
             onClick={handleBack}
-            className='flex items-center gap-2 text-primary hover:text-blue transition-colors duration-200 mb-4 group'
+            className='flex items-center gap-2 text-primary hover:text-blue transition-colors duration-200 mb-8 mt-8 group'
         >
             <FiArrowLeft className='w-5 h-5 group-hover:-translate-x-1 transition-transform duration-200' />
             <span className='font-medium'>{label}</span>
