@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import PageHeader from '../components/PageHeader'
-import { data } from 'react-router-dom';
+import BackButton from '../components/BackButton'
 
 const SalaryPage = () => {
     const [searchText, setSearchText] = useState("")
@@ -27,6 +27,7 @@ const SalaryPage = () => {
 
   return (
     <div className='max-w-screen-2xl container mx-auto xl:px-24 px-4'>
+        <BackButton to="/" label="Back to Home" />
         <PageHeader title={"Estimate Salary"} path={"Salary"}/>
 
         <div className='mt-5 '>

@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import Button from '../sidebar/Button'
+import { deleteJob, getAllJobs } from '../services/firebaseService'
+import BackButton from '../components/BackButton'
 
 const MyJobs = () => {
     const [jobs, setJobs] = useState([])
+    const [originalJobs, setOriginalJobs] = useState([])
     const [searchText, setSearchText] = useState("")
     const [isLoading, setIsLoading] = useState(true)
 
@@ -13,13 +15,18 @@ const MyJobs = () => {
 
     useEffect(() => {
         setIsLoading(true)
-        fetch(`http://localhost:5000/my-jobs/gboolly@gmail.com`)
-        .then(res => res.json())
-        .then(data => 
-            {setJobs(data);
-                setIsLoading(false)
-
-    })   }, [searchText]);
+        // Get all jobs - you can filter by email later if needed
+        getAllJobs()
+            .then(data => {
+                setJobs(data);
+                setOriginalJobs(data);
+                setIsLoading(false);
+            })
+            .catch(error => {
+                console.error('Error fetching jobs:', error);
+                setIsLoading(false);
+            });
+    }, []);
 
     // pagination
     const indexOfLastItem = currentPage * itemsPerPage
@@ -39,29 +46,45 @@ const MyJobs = () => {
       }
     }
 
-    //console.log(searchText)
-
     const handleSearch = () => {
-        const filter = jobs.filter((job) => job.jobTitle.toLowerCase().indexOf(searchText.toLocaleLowerCase()) !== -1)
+        if (searchText.trim() === "") {
+            setJobs(originalJobs);
+            setCurrentPage(1);
+            return;
+        }
+        
+        const filter = originalJobs.filter((job) => 
+            job.jobTitle && job.jobTitle.toLowerCase().indexOf(searchText.toLowerCase()) !== -1
+        )
         setJobs(filter)
-        setIsLoading(false)
+        setCurrentPage(1);
     }
 
     const handleDelete = (id) => {
-         fetch(`http://localhost:5000/job/${id}`, { method: "DELETE" })
-         .then(res => res.json())
-         .then(data => {
-            if (data.deletedCount > 0) {
-                alert('Job Deleted Successfully!');
-            setJobs(jobs.filter(job => job._id !== id));
-            }
-         })
+        if (!id) {
+            alert('Cannot delete job: Invalid ID');
+            return;
         }
+        
+        if (window.confirm('Are you sure you want to delete this job?')) {
+            deleteJob(id)
+            .then(data => {
+                alert('Job Deleted Successfully!');
+                setJobs(jobs.filter(job => job.id !== id));
+                setOriginalJobs(originalJobs.filter(job => job.id !== id));
+            })
+            .catch(error => {
+                console.error('Error deleting job:', error);
+                alert(`Error deleting job: ${error.message}`);
+            });
+        }
+    }
     
   return (
     <div className='max-w-screen-2xl container mx-auto xl:px-24 px-4'>
+      <BackButton to="/" label="Back to Home" />
       <div className='my-jobs-container'>
-        <h1 className='text-center p-4'>ALL My Jobs</h1>
+        <h1 className='text-center p-4'>All Jobs</h1>
         <div className='p-2 text-center mb-2'>
             <input 
             onChange={(e) => setSearchText(e.target.value)}
@@ -121,7 +144,7 @@ const MyJobs = () => {
                <tbody>
             {
                 currentJobs.map((job, index) => (
-                     <tr key={job._id}>
+                     <tr key={job.id || index}>
             <th className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left text-blueGray-700">
               {index + 1}
             </th>
@@ -135,10 +158,10 @@ const MyJobs = () => {
               ${job.minPrice} - ${job.maxPrice}
             </td>
             <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-              <button><Link to={`/edit-job/${job?._id}`}>Edit</Link></button>
+              <button><Link to={`/edit-job/${job?.id}`}>Edit</Link></button>
             </td>
             <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-              <button onClick={() => handleDelete(job._id)} className='bg-red-700 py-2 px-6 text-white rounded-sm'>Delete</button>
+              <button onClick={() => handleDelete(job.id)} className='bg-red-700 py-2 px-6 text-white rounded-sm'>Delete</button>
             </td>
           </tr>
                 ))

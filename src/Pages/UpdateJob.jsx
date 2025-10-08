@@ -1,39 +1,80 @@
 import React from 'react'
-import { useLoaderData, useParams } from 'react-router-dom'
-import { useState } from 'react'
+import { useParams } from 'react-router-dom'
+import { useState, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import CreatableSelect from 'react-select/creatable'
+import { updateJob, getJobById } from '../services/firebaseService'
+import BackButton from '../components/BackButton'
 
 const UpdateJob = () => {
     const {id} = useParams()
-
-    const {_id, jobTitle, companyName, minPrice, maxPrice, salaryType, jobLocation, postingDate, experienceLevel, companyLogo, employmentType, description, postedBy, skills} = useLoaderData()
+    const [jobData, setJobData] = useState(null);
+    const [loading, setLoading] = useState(true);
     const [selectedOption, setSelectedOption] = useState(null);
-        const {
-            register,
-            handleSubmit,reset,
-            formState: { errors },
-        } = useForm();
     
-        const onSubmit = (data) => {
-          data.skills = selectedOption;
-          //{console.log(data);
-        fetch(`http://localhost:5000/update-job/${id}`, {
-          method: 'PATCH',
-          headers: {'content-Type' : "application/json"},
-            body: JSON.stringify(data)
-        })
-        .then(res => res.json())
-        .then((result) => {
-          console.log(result);
-          if(result.acknowledged === true) {
-            alert('Job updated successfully!')
-          }
-          reset()
-        });
-      };
+    // Initialize useForm hook at the top level (before any conditional returns)
+    const {
+        register,
+        handleSubmit,
+        reset,
+        formState: { errors },
+    } = useForm();
 
-      const options = [
+    useEffect(() => {
+        if (!id) {
+            setLoading(false);
+            return;
+        }
+        
+        getJobById(id)
+            .then(data => {
+                setJobData(data);
+                setSelectedOption(data.skills || []);
+                setLoading(false);
+            })
+            .catch(error => {
+                console.error('Error fetching job:', error);
+                setLoading(false);
+            });
+    }, [id]);
+
+    // Handle loading state
+    if (loading) {
+        return <div className='max-w-screen-2xl container mx-auto xl:px-24 px-4 py-12'>
+            <div className='text-center'>
+                <p className='text-lg'>Loading job details...</p>
+            </div>
+        </div>;
+    }
+
+    // Handle job not found
+    if (!jobData) {
+        return <div className='max-w-screen-2xl container mx-auto xl:px-24 px-4 py-12'>
+            <div className='text-center'>
+                <p className='text-lg text-red-600'>Job not found</p>
+                <a href='/my-job' className='text-blue underline mt-4 inline-block'>Back to My Jobs</a>
+            </div>
+        </div>;
+    }
+
+    const {jobTitle, companyName, minPrice, maxPrice, salaryType, jobLocation, postingDate, experienceLevel, companyLogo, employmentType, description, postedBy, skills} = jobData;
+    
+    const onSubmit = (data) => {
+        data.skills = selectedOption;
+        updateJob(id, data)
+            .then((result) => {
+                console.log(result);
+                alert('Job updated successfully!');
+                // Optionally redirect back to my jobs page
+                window.location.href = '/my-job';
+            })
+            .catch(error => {
+                console.error('Error updating job:', error);
+                alert('Error updating job: ' + error.message);
+            });
+    };
+
+    const options = [
         {value: 'Javascript', label: 'Javascript'},
         {value: 'C++', label: 'C++'},
         {value: 'HTML', label: 'HTML'},
@@ -44,11 +85,12 @@ const UpdateJob = () => {
         {value: 'Redux', label: 'Redux'},
     ]
 
-  return (
-    <div className='max-w-screen-2xl container mx-auto xl:px-24 px-4'>
-      {/* form */}
-      <div className='bg-[#FAFAFA] py-10 px-4 lg:px-16'>
-        <form onSubmit={handleSubmit(onSubmit)} className='space-y-5'>
+    return (
+        <div className='max-w-screen-2xl container mx-auto xl:px-24 px-4'>
+            <BackButton to="/my-job" label="Back to My Jobs" />
+            <div className='bg-[#FAFAFA] py-10 px-4 lg:px-16'>
+                <h2 className='text-2xl font-bold mb-6 text-center'>Edit Job Posting</h2>
+                <form onSubmit={handleSubmit(onSubmit)} className='space-y-5'>
 
             {/* first row */}
             <div className='create-job-flex'>
@@ -83,7 +125,7 @@ const UpdateJob = () => {
              <div className='lg:w-1/2 w-full'>
                <label className='block mb-2 text-lg'>Salary Type</label>
                 <select {...register("salaryType")} className='create-job-input'>
-                     <option value={salaryType}>{salaryType}Choose your salary</option>
+                     <option value={salaryType}>{salaryType}</option>
                      <option value="Hourly">Hourly</option>
                      <option value="Monthly">Monthly</option>
                      <option value="Yearly">Yearly</option>
@@ -107,9 +149,11 @@ const UpdateJob = () => {
                <label className='block mb-2 text-lg'>Experience Level</label>
                 <select {...register("experienceLevel")} className='create-job-input'>
                      <option value={experienceLevel}>{experienceLevel}</option>
-                     <option value="NoExperience">Hourly</option>
+                     <option value="NoExperience">No Experience</option>
                      <option value="Internship">Internship</option>
-                     <option value="Work remotely">Work remotely</option>
+                     <option value="Entry">Entry Level</option>
+                     <option value="Mid-level">Mid-level</option>
+                     <option value="Senior">Senior</option>
                 </select>
              </div>
             </div>
@@ -167,12 +211,15 @@ const UpdateJob = () => {
                 className='create-job-input'/>
             </div>
 
-            <input type="submit" className='block mt-12 bg-blue text-white font-semibold px-8 py-2 rounded-sm cursor-pointer'/>
-        </form>
-
-      </div>
-    </div>
-  )
+                    <input 
+                        type="submit" 
+                        value="Update Job"
+                        className='block mt-12 bg-blue text-white font-semibold px-8 py-2 rounded-sm cursor-pointer hover:bg-blue-600 transition-colors'
+                    />
+                </form>
+            </div>
+        </div>
+    )
 }
 
 export default UpdateJob
