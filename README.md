@@ -48,18 +48,37 @@ A modern job portal application built with React, Vite, and Firebase Firestore f
    - Enable Firestore Database
    - Get your Firebase configuration from Project Settings
 
-4. **Configure Environment Variables**
-   - Rename `env.example.txt` to `.env`
-   - Update the file with your actual Firebase credentials:
-   ```
-   VITE_FIREBASE_API_KEY=your_api_key
-   VITE_FIREBASE_AUTH_DOMAIN=your_auth_domain
-   VITE_FIREBASE_PROJECT_ID=your_project_id
-   VITE_FIREBASE_STORAGE_BUCKET=your_storage_bucket
-   VITE_FIREBASE_MESSAGING_SENDER_ID=your_sender_id
-   VITE_FIREBASE_APP_ID=your_app_id
-   VITE_FIREBASE_MEASUREMENT_ID=your_measurement_id
-   ```
+4. **Configure Environment Variables (REQUIRED) 🔒**
+   
+   **IMPORTANT:** The app will NOT run without this step!
+   
+   - Create a `.env` file in the project root:
+     ```bash
+     # Windows
+     Copy-Item env.example.txt .env
+     
+     # macOS/Linux
+     cp env.example.txt .env
+     ```
+   
+   - Get your Firebase credentials from [Firebase Console](https://console.firebase.google.com)
+     - Go to Project Settings → General → Your apps
+     - Copy all config values
+   
+   - Update `.env` with your actual values:
+     ```env
+     VITE_FIREBASE_API_KEY=your_actual_api_key
+     VITE_FIREBASE_AUTH_DOMAIN=your-project.firebaseapp.com
+     VITE_FIREBASE_PROJECT_ID=your-project-id
+     VITE_FIREBASE_STORAGE_BUCKET=your-project.firebasestorage.app
+     VITE_FIREBASE_MESSAGING_SENDER_ID=123456789
+     VITE_FIREBASE_APP_ID=1:123456:web:abc123
+     VITE_FIREBASE_MEASUREMENT_ID=G-ABC123
+     ```
+   
+   - **NEVER commit the `.env` file** - it's already in `.gitignore`
+   
+   📖 For detailed security setup, see [SECURITY.md](SECURITY.md)
 
 5. **Run the development server**
    ```bash
